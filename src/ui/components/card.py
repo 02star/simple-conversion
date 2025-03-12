@@ -22,7 +22,7 @@ class CardWidget(QWidget):
         main_layout = QVBoxLayout(self)
         icon_layout = QHBoxLayout()
         for path in self.icon_paths:
-            pixmap = QPixmap(path)
+            pixmap = QPixmap(str(path))
             label = QLabel(self)
             scaled_pixmap = pixmap.scaled(
                 20, 20,

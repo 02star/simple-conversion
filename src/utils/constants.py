@@ -10,8 +10,4 @@ class FileTypes:
     WORD = "Word Files (*.docx)"
     EXCEL = "Excel Files (*.xlsx)"
     IMAGE = "Image Files (*.png *.jpg *.jpeg)"
-
-
-class StatusMessages:
-    SUCCESS = ("操作成功", 5000)
-    FAILURE = ("操作失败", 5000)
+    PPT = "PDF Files (*.ppt *.pptx)"

@@ -12,14 +12,16 @@ from typing import Tuple
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QFileDialog, QWidget, QMessageBox
 
+from src.core.excel_converter import ExcelConverter
 from src.core.img_converter import ImageConverter
 from src.core.pdf_converter import PDFConverter
+from src.core.ppt_converter import PPTConverter
 from src.core.word_converter import WordConverter
 from src.ui.base_window import BaseWindow
 from src.ui.components.card import CardWidget
 from src.ui.components.flow_layout import FlowLayout
 from src.utils.constants import FileTypes
-from src.utils.path_manager import Icons
+from src.utils.assets import APP_ICONS
 
 
 def _get_input_path(parent: QWidget,title: str,default_name: str,file_filter: str) -> Tuple[str, str]:
@@ -74,10 +76,13 @@ class MainWindow(BaseWindow):
         layout = FlowLayout(container)
 
         cards = [
-            ([Icons.PDF, Icons.ARROW, Icons.WORD],"PDF转WORD",self.pdf_to_word),
-            ([Icons.PDF, Icons.ARROW, Icons.IMAGE],"PDF转图片",self.pdf_to_image),
-            ([Icons.IMAGE, Icons.ARROW, Icons.EXCEL],"图片转Excel",self.img_to_excel),
-            ([Icons.WORD, Icons.ARROW, Icons.PDF],"Word转PDF",self.word_to_pdf)
+            ([APP_ICONS.PDF, APP_ICONS.ARROW, APP_ICONS.WORD],"PDF转WORD",self.pdf_to_word),
+            ([APP_ICONS.PDF, APP_ICONS.ARROW, APP_ICONS.IMAGE],"PDF转图片",self.pdf_to_image),
+            ([APP_ICONS.IMAGE, APP_ICONS.ARROW, APP_ICONS.EXCEL],"图片转Excel",self.img_to_excel),
+            ([APP_ICONS.WORD, APP_ICONS.ARROW, APP_ICONS.PDF],"Word转PDF",self.word_to_pdf),
+            ([APP_ICONS.PDF, APP_ICONS.ARROW, APP_ICONS.EXCEL], "PDF转Excel", self.pdf_to_excel),
+            ([APP_ICONS.EXCEL, APP_ICONS.ARROW, APP_ICONS.PDF], "Excel转PDF", self.excel_to_pdf),
+            ([APP_ICONS.PPT, APP_ICONS.ARROW, APP_ICONS.PDF], "PPT转PDF", self.ppt_to_pdf)
         ]
         for icons, title, callback in cards:
             card = CardWidget(icons, title)
@@ -101,12 +106,24 @@ class MainWindow(BaseWindow):
 
     @handle_conversion(input_type=FileTypes.WORD,output_type=FileTypes.PDF)
     def word_to_pdf(self, input_path, output_path):
-        WordConverter.word_to_pdf(input_path, output_path)
+        WordConverter.to_pdf(input_path, output_path)
+
+    @handle_conversion(input_type=FileTypes.PDF,output_type=FileTypes.EXCEL)
+    def pdf_to_excel(self, input_path, output_path):
+        PDFConverter.to_excel(input_path, output_path)
+
+    @handle_conversion(input_type=FileTypes.EXCEL, output_type=FileTypes.PDF)
+    def excel_to_pdf(self, input_path, output_path):
+        ExcelConverter.to_pdf(input_path, output_path)
+
+    @handle_conversion(input_type=FileTypes.PPT, output_type=FileTypes.PDF)
+    def ppt_to_pdf(self, input_path, output_path):
+        PPTConverter.to_pdf(input_path, output_path)
 
 
 def main_window():
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon(r'C:\Workspaces\simple-conversion\assets\icon.png'))
+    app.setWindowIcon(QIcon(r'/assets/logo.png'))
     main = MainWindow()
     main.show()
     sys.exit(app.exec())

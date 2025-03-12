@@ -9,5 +9,5 @@ from docx2pdf import convert
 
 class WordConverter:
     @staticmethod
-    def word_to_pdf(input_path, output_path):
+    def to_pdf(input_path, output_path):
         convert(input_path, output_path)
